@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 // ─── IMAGE IMPORTS ────────────────────────────────────────────────────────────
 import img1 from "@/imports/a087a64f-0578-42e5-a18f-110e9e1d8017.jpg";
@@ -838,6 +838,213 @@ function PhotoGallery({ onBack }: { onBack: () => void }) {
   );
 }
 
+// ─── MUSIC PLAYER ────────────────────────────────────────────────────────────
+
+// Auto-discovers every audio file you drop into src/music/
+const RAW_MUSIC = import.meta.glob("/src/music/*.{mp3,wav,ogg,m4a,flac,MP3,WAV,OGG,M4A}", {
+  query: "?url", import: "default", eager: true,
+}) as Record<string, string>;
+
+const TRACKS = Object.entries(RAW_MUSIC)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([path, url]) => {
+    const raw = path.split("/").pop()!.replace(/\.[^/.]+$/, "");
+    const name = raw.replace(/^\d+[\.\-_ ]+/, "").replace(/[-_]/g, " ").trim();
+    return { name, url };
+  });
+
+function MusicPlayer() {
+  const audioRef               = useRef<HTMLAudioElement | null>(null);
+  const [current, setCurrent]  = useState(0);
+  const [playing, setPlaying]  = useState(false);
+  const [progress, setProgress]= useState(0);   // 0–100
+  const [duration, setDuration]= useState(0);
+  const [volume, setVolume]    = useState(0.7);
+  const [shuffle, setShuffle]  = useState(false);
+  const [minimized, setMin]    = useState(false);
+  const [started, setStarted]  = useState(false);
+
+  const noTracks = TRACKS.length === 0;
+
+  // Create audio element once
+  useEffect(() => {
+    const a = new Audio();
+    a.volume = volume;
+    audioRef.current = a;
+
+    a.addEventListener("ended", () => goNext(a));
+    a.addEventListener("timeupdate", () => {
+      if (a.duration) setProgress((a.currentTime / a.duration) * 100);
+    });
+    a.addEventListener("loadedmetadata", () => setDuration(a.duration));
+
+    return () => { a.pause(); a.src = ""; };
+  }, []);
+
+  function loadTrack(index: number, autoPlay = true) {
+    const a = audioRef.current!;
+    a.src = TRACKS[index].url;
+    a.load();
+    if (autoPlay) { a.play(); setPlaying(true); setStarted(true); }
+    setCurrent(index);
+    setProgress(0);
+  }
+
+  function goNext(a?: HTMLAudioElement) {
+    const audio = a || audioRef.current!;
+    let n: number;
+    if (shuffle) {
+      n = Math.floor(Math.random() * TRACKS.length);
+    } else {
+      n = (current + 1) % TRACKS.length;
+    }
+    audio.src = TRACKS[n].url;
+    audio.load();
+    audio.play();
+    setCurrent(n);
+    setPlaying(true);
+    setProgress(0);
+  }
+
+  function goPrev() {
+    const n = (current - 1 + TRACKS.length) % TRACKS.length;
+    loadTrack(n, true);
+  }
+
+  function togglePlay() {
+    const a = audioRef.current!;
+    if (!started) { loadTrack(current, true); setStarted(true); return; }
+    if (playing) { a.pause(); setPlaying(false); }
+    else         { a.play();  setPlaying(true);  }
+  }
+
+  function seek(e: React.ChangeEvent<HTMLInputElement>) {
+    const a = audioRef.current!;
+    const val = Number(e.target.value);
+    if (a.duration) a.currentTime = (val / 100) * a.duration;
+    setProgress(val);
+  }
+
+  function changeVolume(e: React.ChangeEvent<HTMLInputElement>) {
+    const v = Number(e.target.value);
+    if (audioRef.current) audioRef.current.volume = v;
+    setVolume(v);
+  }
+
+  function fmt(s: number) {
+    if (!s || isNaN(s)) return "0:00";
+    return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+  }
+
+  const trackName = noTracks ? "No songs yet" : TRACKS[current].name;
+  const noteColors = ["#ff9ecf","#FFE033","#7acc5a","#7ecced"];
+
+  const btnBase: React.CSSProperties = {
+    fontFamily: MC_FONT, fontSize: 11, color: "#fff",
+    border: "3px solid", boxShadow: "2px 2px 0 #000",
+    cursor: noTracks ? "not-allowed" : "pointer",
+    padding: "10px 14px", minHeight: 44, background: "#9a7a8a",
+    borderColor: "#5a3a4a #ccaabc #ccaabc #5a3a4a",
+  };
+
+  return (
+    <div style={{ position: "fixed", bottom: 16, right: 16, zIndex: 999, fontFamily: MC_FONT, filter: "drop-shadow(4px 4px 0 #000)" }}>
+
+      {/* Minimized pill */}
+      {minimized ? (
+        <div onClick={() => setMin(false)} style={{
+          background: PANEL_BG, border: "3px solid", borderColor: PANEL_BORDER,
+          padding: "10px 16px", cursor: "pointer", display: "flex", alignItems: "center", gap: 10,
+        }}>
+          <span style={{ fontSize: 14, color: "#d45a8a", animation: playing ? "shimmer 1s infinite" : "none" }}>♪</span>
+          <span style={{ fontSize: "clamp(7px,1.8vw,9px)", color: "#c0457a", maxWidth: 130, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {trackName}
+          </span>
+        </div>
+      ) : (
+        <div style={{ background: PANEL_BG, border: "3px solid", borderColor: PANEL_BORDER, width: "clamp(260px,72vw,310px)" }}>
+
+          {/* Header */}
+          <div style={{ background: "#d45a8a", padding: "8px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "3px solid #8a1a50" }}>
+            <div style={{ display: "flex", gap: 5 }}>
+              {noteColors.map((c, i) => (
+                <span key={i} style={{ fontSize: 10, color: c, animation: playing ? `shimmer ${1 + i * 0.25}s ease-in-out ${i * 0.12}s infinite` : "none" }}>♪</span>
+              ))}
+            </div>
+            <span style={{ fontSize: "clamp(7px,1.8vw,9px)", color: "#fff", textShadow: "1px 1px 0 #7a1a40" }}>MUSIC ♡</span>
+            <button onClick={() => setMin(true)} style={{ background: "none", border: "none", cursor: "pointer", color: "#fff", fontSize: 13, padding: 0 }}>▼</button>
+          </div>
+
+          <div style={{ padding: "14px 14px 12px" }}>
+            {/* Song name */}
+            <div style={{ textAlign: "center", marginBottom: 10 }}>
+              <div style={{ fontSize: "clamp(8px,2vw,10px)", color: "#6a2a4a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textShadow: "1px 1px 0 #fff" }}>
+                {trackName}
+              </div>
+              <div style={{ fontSize: "clamp(6px,1.5vw,8px)", color: "#a06080", marginTop: 4 }}>
+                {noTracks ? "Add MP3s to src/music/" : `${current + 1} / ${TRACKS.length}`}
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div style={{ marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: "clamp(6px,1.4vw,7px)", color: "#a06080", minWidth: 28 }}>{fmt((progress / 100) * duration)}</span>
+              <input type="range" min={0} max={100} value={progress} onChange={seek}
+                disabled={noTracks}
+                style={{ flex: 1, accentColor: "#d45a8a", height: 6, cursor: noTracks ? "not-allowed" : "pointer" }} />
+              <span style={{ fontSize: "clamp(6px,1.4vw,7px)", color: "#a06080", minWidth: 28, textAlign: "right" }}>{fmt(duration)}</span>
+            </div>
+
+            {/* Controls */}
+            <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 12 }}>
+              <button onClick={goPrev} disabled={noTracks} style={btnBase}>⏮</button>
+              <button onClick={togglePlay} disabled={noTracks} style={{
+                ...btnBase,
+                background: playing ? "#c0457a" : "#5aaa3f",
+                borderColor: playing ? "#8a1a50 #f09ac0 #f09ac0 #8a1a50" : "#2a5a18 #7acc5a #7acc5a #2a5a18",
+                padding: "10px 18px",
+              }}>{playing ? "⏸" : "▶"}</button>
+              <button onClick={() => goNext()} disabled={noTracks} style={btnBase}>⏭</button>
+              <button onClick={() => setShuffle(s => !s)} style={{
+                ...btnBase,
+                background: shuffle ? "#c0457a" : "#9a7a8a",
+                borderColor: shuffle ? "#8a1a50 #f09ac0 #f09ac0 #8a1a50" : "#5a3a4a #ccaabc #ccaabc #5a3a4a",
+                fontSize: 9,
+              }}>⇄</button>
+            </div>
+
+            {/* Volume */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 11 }}>🔊</span>
+              <input type="range" min={0} max={1} step={0.01} value={volume} onChange={changeVolume}
+                style={{ flex: 1, accentColor: "#d45a8a", height: 5, cursor: "pointer" }} />
+            </div>
+
+            {/* Track list — scrollable, max 5 visible */}
+            {!noTracks && (
+              <div style={{ marginTop: 12, maxHeight: 110, overflowY: "auto", border: "2px solid #e8b8d0" }}>
+                {TRACKS.map((t, i) => (
+                  <div key={i} onClick={() => loadTrack(i, true)}
+                    style={{
+                      padding: "7px 10px", cursor: "pointer", fontSize: "clamp(6px,1.5vw,8px)",
+                      background: i === current ? "#ffe0ee" : i % 2 === 0 ? "#fce8f2" : "#f8dcea",
+                      color: i === current ? "#c0457a" : "#6a2a4a",
+                      borderBottom: "1px solid #e8b8d0",
+                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                      fontWeight: i === current ? "bold" : "normal",
+                    }}>
+                    {i === current && playing ? "♪ " : `${i + 1}. `}{t.name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── HOME SCREEN ──────────────────────────────────────────────────────────────
 
 const DAILY_MSGS = [
@@ -1044,7 +1251,12 @@ export default function App() {
   function login(name: string) { setPlayer(name); setScreen("home"); }
   function logout() { setPlayer(""); setScreen("login"); }
 
-  if (screen === "home")   return <HomeScreen playerName={player} onLogout={logout} />;
-  if (screen === "create") return <CreatePage onLogin={login} onSwitch={() => setScreen("login")} />;
-  return <LoginPage onLogin={login} onSwitch={() => setScreen("create")} />;
+  return (
+    <>
+      {screen === "home"   && <HomeScreen playerName={player} onLogout={logout} />}
+      {screen === "create" && <CreatePage onLogin={login} onSwitch={() => setScreen("login")} />}
+      {screen === "login"  && <LoginPage onLogin={login} onSwitch={() => setScreen("create")} />}
+      <MusicPlayer />
+    </>
+  );
 }
