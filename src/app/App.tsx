@@ -1,15 +1,12 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
 // ─── IMAGE IMPORTS ────────────────────────────────────────────────────────────
-import img1 from "@/imports/a087a64f-0578-42e5-a18f-110e9e1d8017.jpg";
-import img2 from "@/imports/9b66b651-f1d1-462c-a12c-4fc10cd73a25.jpg";
-import img3 from "@/imports/2773a7a6-805a-40f1-840e-753fc13074dd.jpg";
-import img4 from "@/imports/9e361312-c724-4023-b4a9-57aa7bcfd4b9.jpg";
-import img5 from "@/imports/b0788c1b-0ee6-4e3a-880a-e2b760ee9865.jpg";
-import img6 from "@/imports/ec1097cd-2cd7-496d-a1a1-6843f1021f43.jpg";
-import img7 from "@/imports/6a0bfbe0-3b77-4528-8cd5-a09297e59737.jpg";
-import img8 from "@/imports/45af7876-9415-42d3-9cdc-8177bfdedfc6.jpg";
-import img9 from "@/imports/f21ff434-64e9-4057-885b-ec106b3747d7.jpg";
+import img1 from "@/imports/00ac57a6-8a43-4585-b616-2c79b94e6b92.jpg";
+import img2 from "@/imports/2ac9b5e4-e2fd-4385-a338-99c266118b78.jpg";
+import img3 from "@/imports/3035dceb-b003-4499-9ab5-606046ab38ab (1).jpg";
+import img4 from "@/imports/53d15451-591d-490f-8747-0624f92004ff.jpg";
+import img5 from "@/imports/6f178260-b132-4762-a80a-bccd0a207efe.jpg";
+import img6 from "@/imports/b689b97b-4985-4d75-a366-e43e6821f2cd.jpg";
 
 const PHOTOS = [
   { id: 1, src: img1, label: "Peace ✌", msg: "You are so loved ♡" },
@@ -18,9 +15,6 @@ const PHOTOS = [
   { id: 4, src: img4, label: "Daydream", msg: "Your dreams are valid ♡" },
   { id: 5, src: img5, label: "Candid", msg: "You are beautiful ♡" },
   { id: 6, src: img6, label: "Sunshine", msg: "You light up the room ♡" },
-  { id: 7, src: img7, label: "Summer", msg: "You deserve good days ♡" },
-  { id: 8, src: img8, label: "Smiles", msg: "Your smile heals hearts ♡" },
-  { id: 9, src: img9, label: "Pouty", msg: "Even sad you are cute ♡" },
 ];
 
 const MC_FONT = "'Press Start 2P', monospace";
@@ -158,7 +152,7 @@ function GameTitle({ color = "day" }: { color?: "day" | "night" }) {
         animation: "titleFloat 3s ease-in-out infinite, titleGlow 3s ease-in-out infinite",
         lineHeight: 1.2,
       }}>
-        TRISHA&apos;S
+        ALI&apos;S
       </div>
       <div style={{
         fontFamily: MC_FONT,
@@ -533,7 +527,7 @@ function MemoryGame({ onBack }: { onBack: () => void }) {
               {moves} MOVES · {fmt(time)}
             </div>
             <div style={{ fontSize: "clamp(8px,2vw,10px)", color: "#6a2a4a", lineHeight: 2.4, marginBottom: 18 }}>
-              You found all 9 of her photos!<br />She is lucky to have you ♡
+              You found all 6 photos!<br />Ali is lucky to have you ♡
             </div>
             {/* Mini polaroid strip */}
             <div style={{ display: "flex", gap: 6, justifyContent: "center", marginBottom: 20, flexWrap: "wrap" }}>
@@ -600,14 +594,14 @@ function GardenGame({ onBack }: { onBack: () => void }) {
       <div className="relative z-10 flex flex-col items-center flex-1 px-4 py-6">
         <div style={{ width: "100%", maxWidth: 520, display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
           <McButton small variant="gray" onClick={onBack}>← BACK</McButton>
-          <div style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#c0457a", textShadow: "2px 2px 0 #7a1a40" }}>HER GARDEN</div>
+          <div style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#c0457a", textShadow: "2px 2px 0 #7a1a40" }}>ALI'S TULIP GARDEN</div>
           <McButton small variant="gray" onClick={() => { setPlots(Array(6).fill("empty")); setAllBloomed(false); }}>RESET</McButton>
         </div>
 
         <McPanel style={{ maxWidth: 520, width: "100%" }}>
           <div style={{ textAlign: "center", marginBottom: 16 }}>
             <div style={{ fontSize: "clamp(7px,2vw,9px)", color: "#a06080", lineHeight: 2 }}>
-              {allBloomed ? "Your garden is full of love! ♡" : "Click each plot to grow flowers ♡"}
+              {allBloomed ? "Your garden is full of love! ♡" : "Click each plot to grow tulips ♡"}
             </div>
             <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 10 }}>
               {plots.map((p, i) => (
@@ -643,10 +637,10 @@ function GardenGame({ onBack }: { onBack: () => void }) {
                     return (
                       <div style={{ position: "relative", width: 36, height: 44 }}>
                         <div style={{ position: "absolute", left: 16, top: 16, width: 3, height: 28, background: "#3E8A18" }} />
-                        {[[12,10],[20,10],[8,16],[24,16],[12,22],[20,22]].map(([x,y],k) => (
-                          <div key={k} style={{ position: "absolute", left: x, top: y, width: 8, height: 8, background: c }} />
-                        ))}
-                        <div style={{ position: "absolute", left: 16, top: 14, width: 7, height: 7, background: "#FFE033", boxShadow: `2px 2px 0 ${d}` }} />
+                        <div style={{ position: "absolute", left: 10, top: 8, width: 16, height: 15, background: c, boxShadow: `4px 4px 0 ${d}` }} />
+                        <div style={{ position: "absolute", left: 7, top: 12, width: 8, height: 12, background: c, boxShadow: `-2px 3px 0 ${d}` }} />
+                        <div style={{ position: "absolute", left: 21, top: 12, width: 8, height: 12, background: c, boxShadow: `2px 3px 0 ${d}` }} />
+                        <div style={{ position: "absolute", left: 14, top: 18, width: 8, height: 8, background: "#FFE033", border: `1px solid ${d}` }} />
                       </div>
                     );
                   })()}
@@ -782,7 +776,7 @@ function PhotoGallery({ onBack }: { onBack: () => void }) {
       <div className="relative z-10 flex flex-col items-center flex-1 px-4 py-6">
         <div style={{ width: "100%", maxWidth: 560, display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
           <McButton small variant="gray" onClick={onBack}>← BACK</McButton>
-          <div style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#c0457a", textShadow: "2px 2px 0 #7a1a40" }}>HER ALBUM ♡</div>
+          <div style={{ fontSize: "clamp(10px,2.5vw,12px)", color: "#c0457a", textShadow: "2px 2px 0 #7a1a40" }}>ALI'S ALBUM ♡</div>
           <div style={{ width: 60 }} />
         </div>
 
@@ -840,8 +834,8 @@ function PhotoGallery({ onBack }: { onBack: () => void }) {
 
 // ─── MUSIC PLAYER ────────────────────────────────────────────────────────────
 
-// Auto-discovers every audio file you drop into src/music/
-const RAW_MUSIC = import.meta.glob("/src/music/*.{mp3,wav,ogg,m4a,flac,MP3,WAV,OGG,M4A}", {
+// Auto-discovers every audio file in src/imports/
+const RAW_MUSIC = import.meta.glob("/src/imports/*.{mp3,wav,ogg,m4a,flac,MP3,WAV,OGG,M4A}", {
   query: "?url", import: "default", eager: true,
 }) as Record<string, string>;
 
@@ -982,7 +976,7 @@ function MusicPlayer() {
                 {trackName}
               </div>
               <div style={{ fontSize: "clamp(6px,1.5vw,8px)", color: "#a06080", marginTop: 4 }}>
-                {noTracks ? "Add MP3s to src/music/" : `${current + 1} / ${TRACKS.length}`}
+                {noTracks ? "Add MP3s to src/imports/" : `${current + 1} / ${TRACKS.length}`}
               </div>
             </div>
 
@@ -1058,7 +1052,7 @@ const DAILY_MSGS = [
 
 type GameScreen = "home" | "memory" | "garden" | "axolotl" | "gallery";
 
-function HomeScreen({ playerName, onLogout }: { playerName: string; onLogout: () => void }) {
+function HomeScreen({ playerName }: { playerName: string }) {
   const [game, setGame] = useState<GameScreen>("home");
   const dayMsg = DAILY_MSGS[new Date().getDate() % DAILY_MSGS.length];
 
@@ -1068,9 +1062,9 @@ function HomeScreen({ playerName, onLogout }: { playerName: string; onLogout: ()
   if (game === "gallery") return <PhotoGallery onBack={() => setGame("home")} />;
 
   const GAMES = [
-    { key: "memory",  emoji: "🃏", title: "MEMORY\nMATCH",    desc: "Find her photos!",  variant: "pink"  as const },
-    { key: "gallery", emoji: "📷", title: "HER\nALBUM",       desc: "Her best moments",  variant: "pink"  as const },
-    { key: "garden",  emoji: "🌸", title: "GROW A\nGARDEN",   desc: "Water the flowers", variant: "green" as const },
+    { key: "memory",  emoji: "🃏", title: "MEMORY\nMATCH",    desc: "Find Ali's photos!",  variant: "pink"  as const },
+    { key: "gallery", emoji: "📷", title: "ALI'S\nALBUM",     desc: "Ali's best moments",  variant: "pink"  as const },
+    { key: "garden",  emoji: "🌷", title: "GROW A\nGARDEN",   desc: "Water the tulips",  variant: "green" as const },
     { key: "axolotl", emoji: "🦎", title: "PET THE\nAXOLOTL", desc: "Give some love",    variant: "green" as const },
   ];
 
@@ -1084,7 +1078,6 @@ function HomeScreen({ playerName, onLogout }: { playerName: string; onLogout: ()
           <div style={{ fontSize: "clamp(8px,2.2vw,11px)", color: "#c0457a", textShadow: "2px 2px 0 #7a1a40" }}>
             ♡ HI, {playerName.toUpperCase()}!
           </div>
-          <McButton small variant="gray" onClick={onLogout}>LOG OUT</McButton>
         </div>
 
         <GameTitle color="day" />
@@ -1130,7 +1123,7 @@ function HomeScreen({ playerName, onLogout }: { playerName: string; onLogout: ()
         </McPanel>
 
         <p style={{ marginTop: 18, fontSize: "clamp(7px,1.8vw,9px)", color: "#c87aa0" }}>
-          Trisha&apos;s World · made with ♥
+          Ali&apos;s World · made with ♥
         </p>
       </div>
 
@@ -1155,7 +1148,7 @@ function AuthWrap({ children, title }: { children: React.ReactNode; title: strin
           <div style={{ textAlign: "center", fontSize: "clamp(11px,3vw,14px)", color: "#6a2a4a", marginBottom: 28 }}>{title}</div>
           {children}
         </McPanel>
-        <p style={{ marginTop: 18, fontSize: "clamp(7px,2vw,9px)", color: "#c87aa0" }}>Trisha&apos;s World · made with ♥</p>
+        <p style={{ marginTop: 18, fontSize: "clamp(7px,2vw,9px)", color: "#c87aa0" }}>Ali&apos;s World · made with ♥</p>
       </div>
       <Ground />
       <style>{GLOBAL_CSS}</style>
@@ -1163,99 +1156,25 @@ function AuthWrap({ children, title }: { children: React.ReactNode; title: strin
   );
 }
 
-function LoginPage({ onLogin, onSwitch }: { onLogin: (n: string) => void; onSwitch: () => void }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!username.trim()) { setError("Username is required."); return; }
-    if (!password.trim()) { setError("Password is required."); return; }
-    setError(""); setLoading(true);
-    setTimeout(() => { setLoading(false); onLogin(username.trim()); }, 1400);
-  }
-
+function EntryPage({ onEnter }: { onEnter: () => void }) {
   return (
-    <AuthWrap title="LOG IN">
-      <form onSubmit={submit} noValidate>
-        <McInput id="l-u" label="USERNAME / EMAIL" value={username} onChange={setUsername} placeholder="Enter username" autoComplete="username" />
-        <McInput id="l-p" label="PASSWORD" type="password" value={password} onChange={setPassword} placeholder="••••••••" autoComplete="current-password" />
-        {error && <ErrorBox msg={error} />}
-        <McButton type="submit" disabled={loading} variant="pink" fullWidth>{loading ? "ENTERING..." : "LOG IN ♡"}</McButton>
-        <p style={{ textAlign: "center", marginTop: 14, fontSize: "clamp(7px,1.8vw,9px)", color: "#a06080", cursor: "pointer" }}>
-          FORGOT PASSWORD?
-        </p>
-        <McDivider />
-        <McButton variant="gray" fullWidth onClick={onSwitch}>CREATE NEW ACCOUNT</McButton>
-      </form>
-    </AuthWrap>
-  );
-}
-
-function CreatePage({ onLogin, onSwitch }: { onLogin: (n: string) => void; onSwitch: () => void }) {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!username.trim() || username.length < 3) { setError("Min. 3 chars for username."); return; }
-    if (!email.includes("@")) { setError("Valid email required."); return; }
-    if (password.length < 8) { setError("Min. 8 chars for password."); return; }
-    if (password !== confirm) { setError("Passwords do not match."); return; }
-    setError(""); setLoading(true);
-    setTimeout(() => { setLoading(false); onLogin(username.trim()); }, 1400);
-  }
-
-  const strength = password.length === 0 ? 0 : password.length < 6 ? 1 : password.length < 10 ? 2 : password.length < 14 ? 3 : 4;
-  const sLabel = ["","WEAK","FAIR","GOOD","STRONG"];
-  const sColor = ["","#cc0040","#cc6600","#aacc00","#5aaa3f"];
-
-  return (
-    <AuthWrap title="CREATE ACCOUNT">
-      <form onSubmit={submit} noValidate>
-        <McInput id="r-u" label="USERNAME" value={username} onChange={setUsername} placeholder="Your username" autoComplete="username" />
-        <McInput id="r-e" label="EMAIL" type="email" value={email} onChange={setEmail} placeholder="your@email.com" autoComplete="email" />
-        <McInput id="r-p" label="PASSWORD" type="password" value={password} onChange={setPassword} placeholder="Min. 8 chars" autoComplete="new-password" />
-        {password.length > 0 && (
-          <div style={{ marginBottom: 18, marginTop: -12 }}>
-            <div style={{ display: "flex", gap: 4, marginBottom: 5 }}>
-              {[1,2,3,4].map(i => <div key={i} style={{ height: 5, flex: 1, background: i <= strength ? sColor[strength] : "#9a7a8a", transition: "background .2s", border: "1px solid #6a3a5a" }} />)}
-            </div>
-            <span style={{ fontSize: "clamp(7px,1.8vw,9px)", color: sColor[strength] }}>{sLabel[strength]}</span>
-          </div>
-        )}
-        <McInput id="r-c" label="CONFIRM PASSWORD" type="password" value={confirm} onChange={setConfirm} placeholder="Repeat password" autoComplete="new-password" />
-        {error && <ErrorBox msg={error} />}
-        <McButton type="submit" disabled={loading} variant="pink" fullWidth>{loading ? "CREATING..." : "CREATE ACCOUNT ♡"}</McButton>
-        <McDivider />
-        <McButton variant="gray" fullWidth onClick={onSwitch}>ALREADY HAVE AN ACCOUNT</McButton>
-      </form>
+    <AuthWrap title="WELCOME TO MY WORLD">
+      <McButton variant="pink" fullWidth onClick={onEnter}>ENTER WORLD ♡</McButton>
     </AuthWrap>
   );
 }
 
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 
-type Screen = "login" | "create" | "home";
+type Screen = "entry" | "home";
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>("login");
-  const [player, setPlayer] = useState("");
-
-  function login(name: string) { setPlayer(name); setScreen("home"); }
-  function logout() { setPlayer(""); setScreen("login"); }
+  const [screen, setScreen] = useState<Screen>("entry");
 
   return (
     <>
-      {screen === "home"   && <HomeScreen playerName={player} onLogout={logout} />}
-      {screen === "create" && <CreatePage onLogin={login} onSwitch={() => setScreen("login")} />}
-      {screen === "login"  && <LoginPage onLogin={login} onSwitch={() => setScreen("create")} />}
+      {screen === "home"  && <HomeScreen playerName="Ali" />}
+      {screen === "entry" && <EntryPage onEnter={() => setScreen("home")} />}
       <MusicPlayer />
     </>
   );

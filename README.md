@@ -1,7 +1,7 @@
 
-  # Minecraft Login Screen Design
+  # Ali's World
 
-  This is a code bundle for Minecraft Login Screen Design. The original project is available at https://www.figma.com/design/mZ46taCsD2JVCkVoqjiWaa/Minecraft-Login-Screen-Design.
+  Ali's World is a Minecraft-inspired interactive experience with games, photos, tulips, and music.
 
   ## Running the code
 
